@@ -39,3 +39,16 @@ H:\Download\ML_Learning\Kmeans\bin\Release\OxyPlot.WindowsForms.pdb
 H:\Download\ML_Learning\Kmeans\bin\Release\OxyPlot.WindowsForms.xml
 H:\Download\ML_Learning\Kmeans\bin\Release\OxyPlot.pdb
 H:\Download\ML_Learning\Kmeans\bin\Release\OxyPlot.xml
+C:\Git\ML_Learning\Kmeans\bin\Release\Kmeans.exe
+C:\Git\ML_Learning\Kmeans\bin\Release\Kmeans.pdb
+C:\Git\ML_Learning\Kmeans\bin\Release\ML_Lib.dll
+C:\Git\ML_Learning\Kmeans\bin\Release\OxyPlot.WindowsForms.dll
+C:\Git\ML_Learning\Kmeans\bin\Release\OxyPlot.dll
+C:\Git\ML_Learning\Kmeans\bin\Release\ML_Lib.pdb
+C:\Git\ML_Learning\Kmeans\bin\Release\OxyPlot.WindowsForms.pdb
+C:\Git\ML_Learning\Kmeans\bin\Release\OxyPlot.WindowsForms.xml
+C:\Git\ML_Learning\Kmeans\bin\Release\OxyPlot.pdb
+C:\Git\ML_Learning\Kmeans\bin\Release\OxyPlot.xml
+C:\Git\ML_Learning\Kmeans\obj\Release\Kmeans.csprojResolveAssemblyReference.cache
+C:\Git\ML_Learning\Kmeans\obj\Release\Kmeans.exe
+C:\Git\ML_Learning\Kmeans\obj\Release\Kmeans.pdb

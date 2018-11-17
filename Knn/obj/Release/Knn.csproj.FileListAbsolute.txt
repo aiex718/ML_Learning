@@ -18,3 +18,17 @@ H:\Download\ML_Learning\Knn\bin\Release\OxyPlot.WindowsForms.pdb
 H:\Download\ML_Learning\Knn\bin\Release\OxyPlot.WindowsForms.xml
 H:\Download\ML_Learning\Knn\bin\Release\OxyPlot.pdb
 H:\Download\ML_Learning\Knn\bin\Release\OxyPlot.xml
+C:\Git\ML_Learning\Knn\bin\Release\Knn.exe.config
+C:\Git\ML_Learning\Knn\bin\Release\Knn.exe
+C:\Git\ML_Learning\Knn\bin\Release\Knn.pdb
+C:\Git\ML_Learning\Knn\bin\Release\ML_Lib.dll
+C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.WindowsForms.dll
+C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.dll
+C:\Git\ML_Learning\Knn\bin\Release\ML_Lib.pdb
+C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.WindowsForms.pdb
+C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.WindowsForms.xml
+C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.pdb
+C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.xml
+C:\Git\ML_Learning\Knn\obj\Release\Knn.csprojResolveAssemblyReference.cache
+C:\Git\ML_Learning\Knn\obj\Release\Knn.exe
+C:\Git\ML_Learning\Knn\obj\Release\Knn.pdb

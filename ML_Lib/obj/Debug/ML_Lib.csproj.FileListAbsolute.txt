@@ -39,3 +39,16 @@ H:\Download\ML_Learning\ML_Lib\bin\Debug\OxyPlot.pdb
 H:\Download\ML_Learning\ML_Lib\bin\Debug\OxyPlot.xml
 H:\Download\ML_Learning\ML_Lib\bin\Debug\OxyPlot.WindowsForms.pdb
 H:\Download\ML_Learning\ML_Lib\bin\Debug\OxyPlot.WindowsForms.xml
+C:\Git\ML_Learning\ML_Lib\bin\Debug\ML_Lib.dll
+C:\Git\ML_Learning\ML_Lib\bin\Debug\ML_Lib.pdb
+C:\Git\ML_Learning\ML_Lib\bin\Debug\OxyPlot.dll
+C:\Git\ML_Learning\ML_Lib\bin\Debug\OxyPlot.WindowsForms.dll
+C:\Git\ML_Learning\ML_Lib\bin\Debug\OxyPlot.pdb
+C:\Git\ML_Learning\ML_Lib\bin\Debug\OxyPlot.xml
+C:\Git\ML_Learning\ML_Lib\bin\Debug\OxyPlot.WindowsForms.pdb
+C:\Git\ML_Learning\ML_Lib\bin\Debug\OxyPlot.WindowsForms.xml
+C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.csprojResolveAssemblyReference.cache
+C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.Views.Points2DCollectionsViewer.resources
+C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.csproj.GenerateResource.Cache
+C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.dll
+C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.pdb

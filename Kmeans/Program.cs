@@ -18,7 +18,7 @@ namespace KmeanPractice
         {
             bool retry = true;
             int RetryCount = 0;
-            int NodesMaxValueSet=10000, NodesSet=15000, ClassSet=3, IterationLimit=100, ConvDistance=5 , DataGroupCount = 3;
+            int NodesMaxValueSet=10000, NodesSet=10000, ClassSet=3, IterationLimit=100, ConvDistance=5 , DataGroupCount = 3;
             double FluctuationRatio = 0.18;
 
             Console.WriteLine("Using demo setup?[y/n]");
@@ -27,7 +27,7 @@ namespace KmeanPractice
             {
                 Console.WriteLine("Input node maximum value:(Default:10000)");
                 NodesMaxValueSet = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Input node count:(Default:15000)");
+                Console.WriteLine("Input node count:(Default:10000)");
                 NodesSet = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("Input class count:(Default:3)");
                 ClassSet = Convert.ToInt32(Console.ReadLine());
