@@ -1,5 +1,5 @@
 # ML_Learning
-A course project. Currently contains 2 algorithm,K-nn and K-means.
+A course project. Currently contains 2 algorithm, K-nn and K-means.
 
 Using [Oxyplot](http://www.oxyplot.org/) for views.
 
