@@ -1,5 +1,5 @@
 # ML_Learning
-A course project.
+A course project with views.
 Currently contains 2 algorithm,K-nn and K-means.
 
 
