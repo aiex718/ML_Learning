@@ -3,8 +3,16 @@ A course project.
 Currently contains 2 algorithm,K-nn and K-means.
 
 
+###K-nn
+![](https://raw.githubusercontent.com/aiex718/ML_Learning/master/Knn/KNN.png)
+
+
+###K-means
+![](https://raw.githubusercontent.com/aiex718/ML_Learning/master/Kmeans/Kmeans.png)
+
+
 # Usage
-Launch Kmeans.exe or Knn.exe ,input 'Y' for demonstration mode,'N' for custom arguments.
+Launch Kmeans.exe or Knn.exe ,input Y for demonstration ,N for custom parameters.
 
 
 # Download
