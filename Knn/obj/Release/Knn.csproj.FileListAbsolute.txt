@@ -29,6 +29,8 @@ C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.WindowsForms.pdb
 C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.WindowsForms.xml
 C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.pdb
 C:\Git\ML_Learning\Knn\bin\Release\OxyPlot.xml
-C:\Git\ML_Learning\Knn\obj\Release\Knn.csprojResolveAssemblyReference.cache
 C:\Git\ML_Learning\Knn\obj\Release\Knn.exe
 C:\Git\ML_Learning\Knn\obj\Release\Knn.pdb
+C:\Git\ML_Learning\Knn\obj\Release\Knn.csprojAssemblyReference.cache
+C:\Git\ML_Learning\Knn\obj\Release\Knn.csproj.CoreCompileInputs.cache
+C:\Git\ML_Learning\Knn\obj\Release\Knn.csproj.CopyComplete

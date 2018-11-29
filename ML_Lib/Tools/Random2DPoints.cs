@@ -6,8 +6,11 @@ using ML_Lib.DataType;
 
 namespace ML_Lib.Tools
 {
-    public class RandomPoints
+    public class Random2DPoints
     {
+        public delegate void OnGenerateHandler(Point2DCollection Nodes);
+        public static event OnGenerateHandler OnGenerateRandomPointsGroup;
+
         public static Point2DCollection GenerateRandomPointsGroup(int maximum, int count, int groups, double FluctuationRatio)
         {
             int Tag = 0;
@@ -15,10 +18,11 @@ namespace ML_Lib.Tools
             for (int i = 0; i < groups; i++)
                 Result.AddRange(GenerateRandomPoints(maximum, count / groups, FluctuationRatio, Tag++));
 
+            OnGenerateRandomPointsGroup?.Invoke(Result);
             return Result;
         }
 
-        public static Point2DCollection GenerateRandomPoints(int maximum, int count, double FluctuationRatio, int Tag = -1)
+        public static Point2DCollection GenerateRandomPoints(int maximum, int count, double FluctuationRatio=0, int Tag = -1)
         {
             Random random = new Random(Guid.NewGuid().GetHashCode());
             Point2DCollection Result = new Point2DCollection();
@@ -40,7 +44,7 @@ namespace ML_Lib.Tools
                 for (int i = 0; i < count;)
                 {
                     Point2D p = new Point2D(random.Next(maximum), random.Next(maximum));
-                    if (MidPoint.GetDistance(p) <= FluctuationRange)
+                    if (MidPoint.GetEuclideanDistance(p) <= FluctuationRange)
                     {
                         if (Tag >= 0)
                             p.Tag = Tag;

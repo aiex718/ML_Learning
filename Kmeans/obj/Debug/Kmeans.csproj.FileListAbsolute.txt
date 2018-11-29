@@ -49,6 +49,8 @@ C:\Git\ML_Learning\Kmeans\bin\Debug\OxyPlot.WindowsForms.pdb
 C:\Git\ML_Learning\Kmeans\bin\Debug\OxyPlot.WindowsForms.xml
 C:\Git\ML_Learning\Kmeans\bin\Debug\OxyPlot.pdb
 C:\Git\ML_Learning\Kmeans\bin\Debug\OxyPlot.xml
-C:\Git\ML_Learning\Kmeans\obj\Debug\Kmeans.csprojResolveAssemblyReference.cache
 C:\Git\ML_Learning\Kmeans\obj\Debug\Kmeans.exe
 C:\Git\ML_Learning\Kmeans\obj\Debug\Kmeans.pdb
+C:\Git\ML_Learning\Kmeans\obj\Debug\Kmeans.csprojAssemblyReference.cache
+C:\Git\ML_Learning\Kmeans\obj\Debug\Kmeans.csproj.CoreCompileInputs.cache
+C:\Git\ML_Learning\Kmeans\obj\Debug\Kmeans.csproj.CopyComplete

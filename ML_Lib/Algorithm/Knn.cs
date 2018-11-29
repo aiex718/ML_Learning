@@ -7,49 +7,47 @@ using System.Threading.Tasks;
 
 namespace ML_Lib.Algorithm
 {
-    class PointWithDistance : Point2D
+
+    public class Knn<T> where T:Vector,new()
     {
-        public PointWithDistance(Point2D p , double distance) : base(p.x, p.y, p.Tag)
+        public delegate void OnClassifyHandler(T NewNode,IEnumerable<T> ClosestKPoints,int MostTag, IEnumerable<T> ClassifiedNodes);
+        public event OnClassifyHandler OnClassify;
+
+        VectorCollection<T> ClassifiedNodes;
+
+        public Knn(VectorCollection<T> ClassifiedDataSet)
         {
-            Distance = distance;
+            ClassifiedNodes = ClassifiedDataSet;
         }
 
-        public double Distance;
-    }
-
-
-    public class Knn
-    {
-        public static IEnumerable<Point2D> Classify(int k,Point2D NewPoint,Point2DCollection PointsWithTag)
+        public void Classify(int k,IEnumerable<T> NewNodes)
         {
-            List<PointWithDistance> PointDistance = new List<PointWithDistance>();
+            foreach (var NewNode in NewNodes)
+                Classify(k, NewNode);
+        }
+
+        public void Classify(int k,T NewNode)
+        {
+            List<KeyValuePair<T, double>> NodeDistance = new List<KeyValuePair<T, double>>();
             
-            foreach (var ClassifiedPoint in PointsWithTag)
+            foreach (var ClassifiedNode in ClassifiedNodes)
             {
-                PointDistance.Add(new PointWithDistance(ClassifiedPoint, ClassifiedPoint.GetDistance(NewPoint)));
-            }
-            
-
-            PointDistance.Sort((x, y) => { return x.Distance.CompareTo(y.Distance); });
-
-            var ClosestKPoints = PointDistance.Take(k);
-            int MostTag = ClosestKPoints.GroupBy(p => p.Tag)
-            .OrderByDescending(group => group.Count())
-            .First().Key;
-            Console.WriteLine("NewPoint,x:{0},y:{1},closet points in {2}", NewPoint.x, NewPoint.y,k);
-
-            foreach (var ClosestPoint in ClosestKPoints)
-            {
-                Console.WriteLine("Point,x:{0},y:{1},tag:{2},distance{3}", ClosestPoint.x, ClosestPoint.y, ClosestPoint.Tag, ClosestPoint.Distance);
+                NodeDistance.Add(new KeyValuePair<T, double>(ClassifiedNode, ClassifiedNode.GetEuclideanDistance(NewNode)));
             }
 
-            Console.WriteLine("MostTag:{0}", MostTag);
-            Console.WriteLine("----------------------------------");
+            NodeDistance.Sort((x, y) => { return x.Value.CompareTo(y.Value); });
 
-            NewPoint.Tag = MostTag;
-            PointsWithTag.Add(NewPoint);
+            var ClosestKPoints = NodeDistance.Take(k);
 
-            return ClosestKPoints;
+            int MostTag = ClosestKPoints
+                .GroupBy(node => node.Key.Tag)
+                .OrderByDescending(group => group.Count())
+                .First().Key;
+            
+            NewNode.Tag = MostTag;
+            ClassifiedNodes.Add(NewNode);
+
+            OnClassify?.Invoke(NewNode, ClosestKPoints.Select(x => x.Key), MostTag, ClassifiedNodes);
         }
 
     }

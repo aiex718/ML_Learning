@@ -51,8 +51,12 @@
     <Compile Include="Algorithm\Kmeans.cs" />
     <Compile Include="Algorithm\Knn.cs" />
     <Compile Include="DataType\Point2D.cs" />
+    <Compile Include="DataType\RawImage28x28.cs" />
+    <Compile Include="DataType\Vector.cs" />
+    <Compile Include="Interface\ITag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tools\RandomPoints.cs" />
+    <Compile Include="Tools\MnistDataSetLoader.cs" />
+    <Compile Include="Tools\Random2DPoints.cs" />
     <Compile Include="Views\Points2DCollectionsViewer.cs">
       <SubType>Form</SubType>
     </Compile>
