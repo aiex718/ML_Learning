@@ -8,24 +8,27 @@ namespace ML_Lib.Tools
 {
     public class Random2DPoints
     {
-        public delegate void OnGenerateHandler(Point2DCollection Nodes);
-        public static event OnGenerateHandler OnGenerateRandomPointsGroup;
+        public delegate void GeneratePointGroupsHandler(IEnumerable<Point2D> Nodes);
+        public static event GeneratePointGroupsHandler OnGeneratePointGroups;
 
-        public static Point2DCollection GenerateRandomPointsGroup(int maximum, int count, int groups, double FluctuationRatio)
+        public delegate void GeneratePointsHandler(IEnumerable<Point2D> Nodes);
+        public static event GeneratePointsHandler OnGeneratePoints;
+
+        public static IEnumerable<Point2D> GenerateRandomPointsGroup(int maximum, int count, int groups, double FluctuationRatio)
         {
             int Tag = 0;
-            Point2DCollection Result = new Point2DCollection();
+            List<Point2D> Result = new List<Point2D>();
             for (int i = 0; i < groups; i++)
-                Result.AddRange(GenerateRandomPoints(maximum, count / groups, FluctuationRatio, Tag++));
+                Result.AddRange(GenerateRandomPoints(maximum, count / groups, FluctuationRatio, (Tag++).ToString()));
 
-            OnGenerateRandomPointsGroup?.Invoke(Result);
+            OnGeneratePointGroups?.Invoke(Result);
             return Result;
         }
 
-        public static Point2DCollection GenerateRandomPoints(int maximum, int count, double FluctuationRatio=0, int Tag = -1)
+        public static IEnumerable<Point2D> GenerateRandomPoints(int maximum, int count, double FluctuationRatio=0, string TagSet = null)
         {
             Random random = new Random(Guid.NewGuid().GetHashCode());
-            Point2DCollection Result = new Point2DCollection();
+            List<Point2D> Result = new List<Point2D>();
 
             if (FluctuationRatio > 0.5)
                 FluctuationRatio = 0.5;
@@ -46,8 +49,11 @@ namespace ML_Lib.Tools
                     Point2D p = new Point2D(random.Next(maximum), random.Next(maximum));
                     if (MidPoint.GetEuclideanDistance(p) <= FluctuationRange)
                     {
-                        if (Tag >= 0)
-                            p.Tag = Tag;
+                        if (String.IsNullOrEmpty(TagSet)==false)
+                        {
+                            p.OriginalTag = TagSet;
+                            p.ClassifiedTag = TagSet;
+                        }
 
                         Result.Add(p);
                         i++;
@@ -63,7 +69,7 @@ namespace ML_Lib.Tools
                 }
             }
 
-
+            OnGeneratePoints?.Invoke(Result);
             return Result;
         }
 

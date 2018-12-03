@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ML_Lib.Views;
 using ML_Lib.DataType;
-using ML_Lib.Algorithm;
+using ML_Lib.Algorithm.Knn;
 using ML_Lib.Tools;
 
 namespace ProgramKnn
@@ -45,16 +45,17 @@ namespace ProgramKnn
             }
 
             //Gen grouped random nodes
-            Random2DPoints.OnGenerateRandomPointsGroup += Random2DPoints_OnGenerate;
-            Point2DCollection ClassifiedPoints = Random2DPoints.GenerateRandomPointsGroup(NodesMaxValueSet, NodesSet, DataGroupCount, FluctuationRatio);
-            ClassifiedPoints.Print();
+            Random2DPoints.OnGeneratePointGroups += Random2DPoints_OnGeneratePointGroups;
+            var ClassifiedPoints = Random2DPoints.GenerateRandomPointsGroup(NodesMaxValueSet, NodesSet, DataGroupCount, FluctuationRatio);
+            var Dataset = new VectorCollection<Point2D>(ClassifiedPoints);
+            Dataset.Print();
 
-            Knn<Point2D> knn = new Knn<Point2D>(ClassifiedPoints);
+            Knn<Point2D> knn = new Knn<Point2D>(Dataset);
             knn.OnClassify += Knn_OnClassify;
 
             while (Retry)
             {
-                Point2DCollection NewNodes = Random2DPoints.GenerateRandomPoints(NodesMaxValueSet, NewNodesCount);
+                var NewNodes = Random2DPoints.GenerateRandomPoints(NodesMaxValueSet, NewNodesCount);
                 knn.Classify(k, NewNodes);
                 InputCommand();
             }
@@ -91,17 +92,17 @@ namespace ProgramKnn
             }
         }
 
-        private static void Knn_OnClassify(Point2D NewNode, IEnumerable<Point2D> ClosestKPoints, int MostTag, IEnumerable<Point2D> ClassifiedNodes)
+        private static void Knn_OnClassify(Point2D NewNode, IEnumerable<Point2D> ClosestKPoints, string MostTag, IEnumerable<Point2D> ClassifiedNodes)
         {
             Console.WriteLine("NewPoint,x:{0},y:{1}\t,closet points in {2}", NewNode.x, NewNode.y, k);
 
             foreach (var ClosestPoint in ClosestKPoints)
-                Console.WriteLine("Point,x:{0},y:{1}\t,tag:{2},distance{3}", ClosestPoint.x, ClosestPoint.y, ClosestPoint.Tag, ClosestPoint.GetEuclideanDistance(NewNode));
+                Console.WriteLine("Point,x:{0},y:{1}\t,tag:{2},distance{3}", ClosestPoint.x, ClosestPoint.y, ClosestPoint.OriginalTag, ClosestPoint.GetEuclideanDistance(NewNode));
 
             Console.WriteLine("MostTag:{0}", MostTag);
             Console.WriteLine("----------------------------------");
 
-            Point2DCollection point2Ds = new Point2DCollection();
+            List<Point2D> point2Ds = new List<Point2D>();
             point2Ds.AddRange(ClassifiedNodes);
 
             StringBuilder sb = new StringBuilder();
@@ -112,18 +113,18 @@ namespace ProgramKnn
             sb.Append(",");
             sb.Append(NewNode.y);
             sb.Append(",Tag:");
-            sb.Append(NewNode.Tag);
+            sb.Append(NewNode.OriginalTag);
             Points2DCollectionsViewer View = Points2DCollectionsViewer.BuildViewer(point2Ds, sb.ToString(), 0, NodesMaxValueSet);
             View.AddMarkAt(NewNode, 20, 1);
-
-            foreach (var ClosetPoint in ClosestKPoints)
-                View.AddMarkAt(ClosetPoint, 6, 1);
+            
+            foreach (var ClosestPoint in ClosestKPoints)
+                View.AddMarkAt(ClosestPoint, 6, 1);
             Points2DCollectionsViewer.ShowViewer(View);
         }
 
 
 
-        private static void Random2DPoints_OnGenerate(Point2DCollection Nodes)
+        private static void Random2DPoints_OnGeneratePointGroups(IEnumerable<Point2D> Nodes)
         {
             Points2DCollectionsViewer View = Points2DCollectionsViewer.BuildViewer(Nodes, "RawData Generated", 0, NodesMaxValueSet);
             Points2DCollectionsViewer.ShowViewer(View);

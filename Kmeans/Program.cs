@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ML_Lib.Views;
 using ML_Lib.DataType;
-using ML_Lib.Algorithm;
+using ML_Lib.Algorithm.Kmeans;
 using ML_Lib.Tools;
+using System.IO;
 
 namespace KmeanPractice
 {
@@ -48,17 +49,21 @@ namespace KmeanPractice
             }
 
             //Gen grouped random nodes
-            Random2DPoints.OnGenerateRandomPointsGroup += Random2DPoints_OnGenerate;
-            Point2DCollection Nodes = Random2DPoints.GenerateRandomPointsGroup(NodesMaxValueSet, NodesSet, DataGroupCount, FluctuationRatio);
-            Nodes.Print();
+            Random2DPoints.OnGeneratePointGroups += Random2DPoints_OnGeneratePointGroups;
+            var RandomPoints = Random2DPoints.GenerateRandomPointsGroup(NodesMaxValueSet, NodesSet, DataGroupCount, FluctuationRatio);
+            var Dataset = new VectorCollection<Point2D>(RandomPoints);
+            Dataset.Print();
 
             while (Retry)
             {
-                Kmeans<Point2D> kmeans = new Kmeans<Point2D>(Nodes);
+                Kmeans<Point2D> kmeans = new Kmeans<Point2D>(Dataset);
                 kmeans.OnIteration += Kmeans_OnIteration;
-                kmeans.Classify(k, IterationLimit, ConvDistance);
 
+                kmeans.Training(k, IterationLimit, ConvDistance);
+
+                
                 InputCommand();
+                kmeans.OnIteration -= Kmeans_OnIteration;
             }
         }
 
@@ -100,7 +105,7 @@ namespace KmeanPractice
             }
         }
 
-        private static void Random2DPoints_OnGenerate(Point2DCollection Nodes)
+        private static void Random2DPoints_OnGeneratePointGroups(IEnumerable<Point2D> Nodes)
         {
             Points2DCollectionsViewer View = Points2DCollectionsViewer.BuildViewer(Nodes, "RawData Generated", 0, NodesMaxValueSet);
             Points2DCollectionsViewer.ShowViewer(View);
@@ -109,9 +114,9 @@ namespace KmeanPractice
 
         private static void Kmeans_OnIteration(IEnumerable<VectorCollection<Point2D>> Groups, int IterationCount)
         {
-            Point2DCollection point2Ds = new Point2DCollection();
+            List<Point2D> point2Ds = new List<Point2D>();
             foreach (var Group in Groups)
-                point2Ds.AddRange(new Point2DCollection(Group));
+                point2Ds.AddRange(Group);
 
             Points2DCollectionsViewer View = Points2DCollectionsViewer.BuildViewer(point2Ds, "Round:"+ Round + ",Iteration:"+ IterationCount, 0, NodesMaxValueSet);
             foreach (var Group in Groups)

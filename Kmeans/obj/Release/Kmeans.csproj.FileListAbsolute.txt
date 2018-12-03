@@ -51,6 +51,7 @@ C:\Git\ML_Learning\Kmeans\bin\Release\OxyPlot.pdb
 C:\Git\ML_Learning\Kmeans\bin\Release\OxyPlot.xml
 C:\Git\ML_Learning\Kmeans\obj\Release\Kmeans.exe
 C:\Git\ML_Learning\Kmeans\obj\Release\Kmeans.pdb
-C:\Git\ML_Learning\Kmeans\obj\Release\Kmeans.csprojAssemblyReference.cache
-C:\Git\ML_Learning\Kmeans\obj\Release\Kmeans.csproj.CoreCompileInputs.cache
-C:\Git\ML_Learning\Kmeans\obj\Release\Kmeans.csproj.CopyComplete
+C:\Git\ML_Learning\Kmeans\obj\Release\Kmeans.csprojResolveAssemblyReference.cache
+C:\Git\ML_Learning\Kmeans\bin\Release\Newtonsoft.Json.dll
+C:\Git\ML_Learning\Kmeans\bin\Release\Newtonsoft.Json.pdb
+C:\Git\ML_Learning\Kmeans\bin\Release\Newtonsoft.Json.xml

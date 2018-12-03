@@ -25,7 +25,7 @@ namespace ML_Lib.Views
             InitializeComponent();
         }
 
-        public static Points2DCollectionsViewer BuildViewer(Point2DCollection PointsWithTag, string Title, int min, int max)
+        public static Points2DCollectionsViewer BuildViewer(IEnumerable<Point2D> PointsWithTag, string Title, int min, int max)
         {
             Points2DCollectionsViewer viewer = new Points2DCollectionsViewer();
             viewer.Text = Title;
@@ -35,12 +35,13 @@ namespace ML_Lib.Views
 
 
             int MaxTagValue = 2;
-            foreach (var Point in PointsWithTag)
+            foreach (var point in PointsWithTag)
             {
-                scatterSeries.Points.Add(new ScatterPoint(Point.x, Point.y, 2, Point.Tag));
+                int tag = Convert.ToInt32(point.ClassifiedTag);
+                scatterSeries.Points.Add(new ScatterPoint(point.x, point.y, 2, tag));
 
-                if (Point.Tag > MaxTagValue)
-                    MaxTagValue = Point.Tag;
+                if (tag > MaxTagValue)
+                    MaxTagValue = tag;
             }
 
             model.Series.Add(scatterSeries);
@@ -92,7 +93,7 @@ namespace ML_Lib.Views
                 t = MarkerType.Circle;
 
             var scatterSeries = new ScatterSeries { MarkerType = t };
-            scatterSeries.Points.Add(new ScatterPoint(point.x, point.y, size, point.Tag));
+            scatterSeries.Points.Add(new ScatterPoint(point.x, point.y, size, Convert.ToDouble(point.ClassifiedTag)));
             plotView.Model.Series.Add(scatterSeries);
             plotView.Refresh();
         }

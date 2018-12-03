@@ -51,6 +51,7 @@ C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.Views.Points2DCollectionsViewer.resou
 C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.csproj.GenerateResource.Cache
 C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.dll
 C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.pdb
-C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.csprojAssemblyReference.cache
-C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.csproj.CoreCompileInputs.cache
-C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.csproj.CopyComplete
+C:\Git\ML_Learning\ML_Lib\obj\Debug\ML_Lib.csprojResolveAssemblyReference.cache
+C:\Git\ML_Learning\ML_Lib\bin\Debug\Newtonsoft.Json.dll
+C:\Git\ML_Learning\ML_Lib\bin\Debug\Newtonsoft.Json.pdb
+C:\Git\ML_Learning\ML_Lib\bin\Debug\Newtonsoft.Json.xml

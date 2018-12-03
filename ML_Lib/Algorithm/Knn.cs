@@ -5,12 +5,12 @@ using System.Text;
 using ML_Lib.DataType;
 using System.Threading.Tasks;
 
-namespace ML_Lib.Algorithm
+namespace ML_Lib.Algorithm.Knn
 {
 
     public class Knn<T> where T:Vector,new()
     {
-        public delegate void OnClassifyHandler(T NewNode,IEnumerable<T> ClosestKPoints,int MostTag, IEnumerable<T> ClassifiedNodes);
+        public delegate void OnClassifyHandler(T NewNode,IEnumerable<T> ClosestKPoints,string MostTag, IEnumerable<T> ClassifiedNodes);
         public event OnClassifyHandler OnClassify;
 
         VectorCollection<T> ClassifiedNodes;
@@ -26,7 +26,7 @@ namespace ML_Lib.Algorithm
                 Classify(k, NewNode);
         }
 
-        public void Classify(int k,T NewNode)
+        public string Classify(int k,T NewNode)
         {
             List<KeyValuePair<T, double>> NodeDistance = new List<KeyValuePair<T, double>>();
             
@@ -34,20 +34,19 @@ namespace ML_Lib.Algorithm
             {
                 NodeDistance.Add(new KeyValuePair<T, double>(ClassifiedNode, ClassifiedNode.GetEuclideanDistance(NewNode)));
             }
+            
+            var ClosestKPoints = NodeDistance.OrderBy(x => x.Value).Take(k);
 
-            NodeDistance.Sort((x, y) => { return x.Value.CompareTo(y.Value); });
-
-            var ClosestKPoints = NodeDistance.Take(k);
-
-            int MostTag = ClosestKPoints
-                .GroupBy(node => node.Key.Tag)
+            string MostTag = ClosestKPoints
+                .GroupBy(node => node.Key.OriginalTag)
                 .OrderByDescending(group => group.Count())
                 .First().Key;
             
-            NewNode.Tag = MostTag;
-            ClassifiedNodes.Add(NewNode);
+            NewNode.ClassifiedTag = MostTag;
 
             OnClassify?.Invoke(NewNode, ClosestKPoints.Select(x => x.Key), MostTag, ClassifiedNodes);
+
+            return MostTag;
         }
 
     }
