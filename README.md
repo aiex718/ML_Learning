@@ -19,6 +19,8 @@ Using [Oxyplot](http://www.oxyplot.org/) for views.
 
 # Usage
 Launch Kmeans.exe or Knn.exe, input Y for demonstration, N for custom parameters.
+
+
 Launch HandwritingDigitRecognition.exe, input U for preset trained data, use mouse to draw in input box then click classify.
 
 # Download
