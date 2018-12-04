@@ -1,7 +1,6 @@
 C:\Git\ML_Learning\HandwritingDigitRecognition\bin\Debug\HandwritingDigitRecognition.exe.config
 C:\Git\ML_Learning\HandwritingDigitRecognition\bin\Debug\HandwritingDigitRecognition.exe
 C:\Git\ML_Learning\HandwritingDigitRecognition\bin\Debug\HandwritingDigitRecognition.pdb
-C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.csprojResolveAssemblyReference.cache
 C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.exe
 C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.pdb
 C:\Git\ML_Learning\HandwritingDigitRecognition\bin\Debug\ML_Lib.dll
@@ -18,4 +17,7 @@ C:\Git\ML_Learning\HandwritingDigitRecognition\bin\Debug\Newtonsoft.Json.xml
 C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.MainForm.resources
 C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.Properties.Resources.resources
 C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.csproj.GenerateResource.Cache
-C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.KmeansTrainedDataView.resources
+C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.csprojAssemblyReference.cache
+C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.Views.KmeansTrainedDataView.resources
+C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.csproj.CoreCompileInputs.cache
+C:\Git\ML_Learning\HandwritingDigitRecognition\obj\Debug\HandwritingDigitRecognition.csproj.CopyComplete

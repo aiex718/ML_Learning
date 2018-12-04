@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using HandwritingDigitRecognition.Views;
 
 namespace HandwritingDigitRecognition
 {
@@ -18,12 +19,11 @@ namespace HandwritingDigitRecognition
     {
         const int PenSize = 12;
         bool isMouseDown = false;
-        Point lastPoint;
-        List<KmeansTrainedDataView> KmeansTrainedDataViews=null;
 
-        const int DefaultKnn_K=1000;
+        const int DefaultKnn_K = 100;
         Knn<RawImage28x28> Knn=null;
         Kmeans<RawImage28x28>.TrainResult KmeansTrainResult = null;
+        List<KmeansTrainedDataView> KmeansTrainedDataViews = null;
 
         public MainForm()
         {
@@ -37,26 +37,50 @@ namespace HandwritingDigitRecognition
             if (knn != null)
             {
                 Knn = knn;
-                Knn.OnClassify += Knn_OnClassify;
-                Knn_KValue_Textbox.Text = DefaultKnn_K.ToString();
+                SetupKnn();
             }
 
             if (kmeansTrainResult!=null)
             {
                 KmeansTrainResult = kmeansTrainResult;
-                KmeansTrainResult.OnClassify += KmeansTrainResult_OnClassify;
-                KmeansTrainedDataViews = new List<KmeansTrainedDataView>();
+                SetupKmeans();
+            }
+        }
+        private void SetupKnn()
+        {
+            Knn.OnClassify += Knn_OnClassify;
+            Knn_KValue_Textbox.Text = DefaultKnn_K.ToString();
+        }
 
-                foreach (var TrainResult in kmeansTrainResult)
+        private void SetupKmeans()
+        {
+            KmeansTrainResult.OnClassify += KmeansTrainResult_OnClassify;
+
+            //Initial view if null
+            if (KmeansTrainedDataViews == null)
+            {
+                KmeansTrainedDataViews = new List<KmeansTrainedDataView>();
+                for (int i = 0; i < KmeansTrainResult.Count; i++)
                 {
                     var view = new KmeansTrainedDataView();
-                    view.SetValue(TrainResult.GetCenter().ToBitmap(), TrainResult.ClassifiedTag,0);
                     KmeansTrainedDataViews.Add(view);
                     KmeansTrainedData_flowPanel.Controls.Add(view);
                 }
+            }
 
+            //Refresh view
+            var DataViewsEnum = KmeansTrainedDataViews.GetEnumerator();
+            foreach (var TrainResult in KmeansTrainResult)
+            {
+                if (DataViewsEnum.MoveNext())
+                {
+                    var CurrentView = DataViewsEnum.Current;
+                    CurrentView.SetValue(TrainResult.GetCenter().ToBitmap(), TrainResult.ClassifiedTag, 0);
+                }
             }
         }
+
+
 
 
         //Refresh results
@@ -116,7 +140,6 @@ namespace HandwritingDigitRecognition
                     g.FillEllipse(Brushes.Black,new RectangleF(e.X- PenSize/2, e.Y- PenSize/2, PenSize, PenSize));
                 }
                 InputPictureBox.Invalidate();
-                lastPoint = e.Location;
             }
         }
 
@@ -130,7 +153,6 @@ namespace HandwritingDigitRecognition
         //Buttons
         private void Load_KemansTrainedData_btn_Click(object sender, EventArgs e)
         {
-            string FilePath = null;
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.InitialDirectory = Environment.CurrentDirectory;
@@ -141,41 +163,11 @@ namespace HandwritingDigitRecognition
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     //Get the path of specified file
-                    FilePath = openFileDialog.FileName;
+                    var FilePath = openFileDialog.FileName;
+                    KmeansTrainResult = new Kmeans<RawImage28x28>.TrainResult(FilePath);
+                    SetupKmeans();
                 }
             }
-
-            if (FilePath != null)
-            {
-                if (KmeansTrainResult == null)
-                {
-                    KmeansTrainResult = new Kmeans<RawImage28x28>.TrainResult(FilePath);
-                    KmeansTrainResult.OnClassify += KmeansTrainResult_OnClassify;
-                    KmeansTrainedDataViews = new List<KmeansTrainedDataView>();
-
-                    foreach (var TrainResult in KmeansTrainResult)
-                    {
-                        var view = new KmeansTrainedDataView();
-                        view.SetValue(TrainResult.GetCenter().ToBitmap(), TrainResult.ClassifiedTag, 0);
-                        KmeansTrainedDataViews.Add(view);
-                        KmeansTrainedData_flowPanel.Controls.Add(view);
-                    }
-                }
-                else
-                {
-                    KmeansTrainResult = new Kmeans<RawImage28x28>.TrainResult(FilePath);
-                    KmeansTrainResult.OnClassify += KmeansTrainResult_OnClassify;
-
-                    var DataViewsEnum = KmeansTrainedDataViews.GetEnumerator();
-                    foreach (var TrainResult in KmeansTrainResult)
-                    {
-                        DataViewsEnum.MoveNext();
-                        var view = DataViewsEnum.Current;
-                        view.SetValue(TrainResult.GetCenter().ToBitmap(), TrainResult.ClassifiedTag, 0);
-                    }
-                }
-            }
-
         }
 
         private void Clear_btn_Click(object sender, EventArgs e)

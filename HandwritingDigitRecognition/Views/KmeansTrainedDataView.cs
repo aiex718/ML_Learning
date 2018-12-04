@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace HandwritingDigitRecognition
+namespace HandwritingDigitRecognition.Views
 {
     public partial class KmeansTrainedDataView : UserControl
     {

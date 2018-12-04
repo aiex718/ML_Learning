@@ -45,10 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KmeansTrainedDataView.cs">
+    <Compile Include="Views\KmeansTrainedDataView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="KmeansTrainedDataView.Designer.cs">
+    <Compile Include="Views\KmeansTrainedDataView.Designer.cs">
       <DependentUpon>KmeansTrainedDataView.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
@@ -75,7 +75,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="KmeansTrainedDataView.resx">
+    <EmbeddedResource Include="Views\KmeansTrainedDataView.resx">
       <DependentUpon>KmeansTrainedDataView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">

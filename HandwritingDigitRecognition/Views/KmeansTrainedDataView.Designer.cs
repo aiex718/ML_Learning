@@ -1,4 +1,4 @@
-﻿namespace HandwritingDigitRecognition
+﻿namespace HandwritingDigitRecognition.Views
 {
     partial class KmeansTrainedDataView
     {
