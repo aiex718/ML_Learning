@@ -7,7 +7,6 @@ namespace ML_Lib.Interface
 {
     interface ITag
     {
-        string OriginalTag { get; set; }
-        string ClassifiedTag { get; set; }
+        string Tag { get; set; }
     }
 }

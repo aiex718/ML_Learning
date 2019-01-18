@@ -10,28 +10,23 @@ namespace ML_Lib.DataType
     public class RawImage28x28 : Vector
     {
         [JsonIgnore]
-        public const int Height = 28, Width = 28;
+        public const int Height = 28, Width = 28 , Length = Height * Width;
 
-        public override int Dimension { get { return Height*Width; } }
+        protected override int DimensionExpected { get { return Length; } }
 
-        public RawImage28x28():base()
+        public RawImage28x28():base(new float[Length], null)
         {
             ;
         }
 
-        public RawImage28x28(Bitmap bitmap, string originalTag = null)
+        public RawImage28x28(Bitmap bitmap, string TagSet):base(BitmapToRawDouble(bitmap), TagSet)
         {
-            OriginalTag = originalTag;
-            VectorData = BitmapToRawDouble(bitmap);
+            
         }
 
-        public RawImage28x28(byte[] rawData, string originalTag = null)
+        public RawImage28x28(byte[] rawData, string TagSet) : base(rawData.Select(x => (float)x).ToArray(), TagSet)
         {
-            if (rawData.Length != Dimension)
-                throw new Exception("RawData length not equivalent");
-
-            OriginalTag = originalTag;
-            VectorData = rawData.Select(x=>(double)x).ToArray();
+            
         }
 
         public byte[] ToRawData()
@@ -56,12 +51,12 @@ namespace ML_Lib.DataType
             return b;
         }
 
-        double[] BitmapToRawDouble(Bitmap bitmap)
+        static float[] BitmapToRawDouble(Bitmap bitmap)
         {
             if (bitmap.Height!= Height || bitmap.Width !=Width)
                 throw new Exception("Bitmap length not equivalent");
 
-            double[] ary = new double[Dimension];
+            float[] ary = new float[Length];
             int cnt = 0;
 
             for (int h = 0; h < bitmap.Height; h++)

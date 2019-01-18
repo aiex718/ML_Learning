@@ -1,6 +1,4 @@
-﻿using ML_Lib.Algorithm.Kmeans;
-using ML_Lib.Algorithm.Knn;
-using ML_Lib.DataType;
+﻿using ML_Lib.DataType;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using HandwritingDigitRecognition.Views;
+using ML_Lib.Classifier;
+using ML_Lib.Classifier.Kmeans;
+using ML_Lib.Classifier.Knn;
 
 namespace HandwritingDigitRecognition
 {
@@ -21,8 +22,8 @@ namespace HandwritingDigitRecognition
         bool isMouseDown = false;
 
         const int DefaultKnn_K = 100;
-        Knn<RawImage28x28> Knn=null;
-        Kmeans<RawImage28x28>.TrainResult KmeansTrainResult = null;
+        Knn<RawImage28x28> Knn = null;
+        Kmeans<RawImage28x28> Kmeans = null;
         List<KmeansTrainedDataView> KmeansTrainedDataViews = null;
 
         public MainForm()
@@ -30,7 +31,7 @@ namespace HandwritingDigitRecognition
             InitializeComponent();
         }
 
-        public MainForm(Knn<RawImage28x28> knn=null, Kmeans<RawImage28x28>.TrainResult kmeansTrainResult=null)
+        public MainForm(Knn<RawImage28x28> knn, Kmeans<RawImage28x28> kmeansTrainResult)
         {
             InitializeComponent();
 
@@ -42,7 +43,7 @@ namespace HandwritingDigitRecognition
 
             if (kmeansTrainResult!=null)
             {
-                KmeansTrainResult = kmeansTrainResult;
+                Kmeans = kmeansTrainResult;
                 SetupKmeans();
             }
         }
@@ -54,13 +55,13 @@ namespace HandwritingDigitRecognition
 
         private void SetupKmeans()
         {
-            KmeansTrainResult.OnClassify += KmeansTrainResult_OnClassify;
-
+            Kmeans.OnClassify += Kmeans_OnClassify;
+             
             //Initial view if null
             if (KmeansTrainedDataViews == null)
             {
                 KmeansTrainedDataViews = new List<KmeansTrainedDataView>();
-                for (int i = 0; i < KmeansTrainResult.Count; i++)
+                for (int i = 0; i < Kmeans.GetTrainResult().Count; i++)
                 {
                     var view = new KmeansTrainedDataView();
                     KmeansTrainedDataViews.Add(view);
@@ -70,12 +71,12 @@ namespace HandwritingDigitRecognition
 
             //Refresh view
             var DataViewsEnum = KmeansTrainedDataViews.GetEnumerator();
-            foreach (var TrainResult in KmeansTrainResult)
+            foreach (RawImage28x28 TrainResult in Kmeans.GetTrainResult())
             {
                 if (DataViewsEnum.MoveNext())
                 {
                     var CurrentView = DataViewsEnum.Current;
-                    CurrentView.SetValue(TrainResult.GetCenter().ToBitmap(), TrainResult.ClassifiedTag, 0);
+                    CurrentView.SetValue(TrainResult.ToBitmap(), TrainResult.Tag, 0);
                 }
             }
         }
@@ -84,19 +85,19 @@ namespace HandwritingDigitRecognition
 
 
         //Refresh results
-        private void KmeansTrainResult_OnClassify(RawImage28x28 NewNode,IEnumerable<VectorCollection<RawImage28x28>> OrderedGroup, string MostTag)
+        private void Kmeans_OnClassify(RawImage28x28 NewNode,IEnumerable<RawImage28x28> OrderedCenter, string MostTag)
         {
             Image OldBitmap = KmeansResultPictureBox.Image;
-            KmeansResultPictureBox.Image = OrderedGroup.First().GetCenter().ToBitmap();
+            KmeansResultPictureBox.Image = OrderedCenter.First().ToBitmap();
             KmeansResultNum_Label.Text = MostTag;
 
-            var Group = OrderedGroup.GetEnumerator();
+            var TrainResultsEnumerator = OrderedCenter.GetEnumerator();
             foreach (var KmeansTrainedDataView in KmeansTrainedDataViews)
             {
-                if (Group.MoveNext())
+                if (TrainResultsEnumerator.MoveNext())
                 {
-                    var TrainResult = Group.Current;
-                    KmeansTrainedDataView.SetValue(TrainResult.GetCenter().ToBitmap(), TrainResult.ClassifiedTag, TrainResult.GetCenter().GetEuclideanDistance(NewNode));
+                    var TrainResult = TrainResultsEnumerator.Current;
+                    KmeansTrainedDataView.SetValue(TrainResult.ToBitmap(), TrainResult.Tag, TrainResult.GetEuclideanDistance(NewNode));
                 }
             }
 
@@ -110,8 +111,8 @@ namespace HandwritingDigitRecognition
             KnnResultNum_Label.Text = MostTag;
 
             StringBuilder sb = new StringBuilder();
-            var OrderedTags = ClosestKPoints.GroupBy(x => x.OriginalTag).OrderByDescending(group=>group.Count());
-            foreach (var OrderedTag in OrderedTags)
+            var OrderTags = ClosestKPoints.GroupBy(x => x.Tag).OrderByDescending(group=>group.Count());
+            foreach (var OrderedTag in OrderTags)
             {
                 sb.Append("Tag:");
                 sb.Append(OrderedTag.Key);
@@ -162,9 +163,8 @@ namespace HandwritingDigitRecognition
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    //Get the path of specified file
                     var FilePath = openFileDialog.FileName;
-                    KmeansTrainResult = new Kmeans<RawImage28x28>.TrainResult(FilePath);
+                    var KmeansTrainResult = new KmeansTrainResult<RawImage28x28>(FilePath);
                     SetupKmeans();
                 }
             }
@@ -177,14 +177,14 @@ namespace HandwritingDigitRecognition
 
         private void Classify_btn_Click(object sender, EventArgs e)
         {
-            Bitmap ResizedInput = new Bitmap (InputPictureBox.Image,28,28);
-            RawImage28x28 NewInput = new RawImage28x28(ResizedInput);
-            NewInput.Print();
+            using (Bitmap ResizedInput = new Bitmap(InputPictureBox.Image, 28, 28))
+            {
+                RawImage28x28 NewInput = new RawImage28x28(ResizedInput, null);
+                NewInput.Print();
 
-            Knn?.Classify(Convert.ToInt32(Knn_KValue_Textbox.Text), NewInput);
-            KmeansTrainResult?.Classify(NewInput);
-
-            ResizedInput.Dispose();
+                Knn?.Classify(Convert.ToInt32(Knn_KValue_Textbox.Text), NewInput);
+                Kmeans?.Classify(NewInput);
+            }
         }
 
 

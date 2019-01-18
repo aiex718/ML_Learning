@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ML_Lib.Tools;
-using ML_Lib.Algorithm.Knn;
-using ML_Lib.Algorithm.Kmeans;
 using ML_Lib.DataType;
 using System.Windows.Forms;
+using ML_Lib.Classifier;
+using ML_Lib.Classifier.Kmeans;
+using ML_Lib.Classifier.Knn;
 
 namespace HandwritingDigitRecognition
 {
@@ -17,13 +18,15 @@ namespace HandwritingDigitRecognition
         static string MnistPixelFilePath = Environment.CurrentDirectory + "\\..\\train-images.idx3-ubyte";
         static string MnistLabelFilePath = Environment.CurrentDirectory + "\\..\\train-labels.idx1-ubyte";
         static string KmeansTrainResultFilePath = Environment.CurrentDirectory + "\\..\\KmeansTrainResult.json";
-        static VectorCollection<RawImage28x28> Dataset = null;
-        static Knn<RawImage28x28> knn = null;
-        static Kmeans<RawImage28x28>.TrainResult KmeansTrainResult = null;
 
         [STAThread]
         static void Main(string[] args)
         {
+            VectorCollection<RawImage28x28> Dataset = null;
+            Knn<RawImage28x28> knn = null;
+            KmeansTrainResult<RawImage28x28> KmeansTrainResult = null;
+            Kmeans<RawImage28x28> kmeans = null;
+
             //CheckFiles
             if (File.Exists(MnistPixelFilePath)==false)
                 MnistPixelFilePath = Environment.CurrentDirectory + "\\train-images.idx3-ubyte";
@@ -34,35 +37,28 @@ namespace HandwritingDigitRecognition
             if (File.Exists(KmeansTrainResultFilePath) == false)
                 KmeansTrainResultFilePath = Environment.CurrentDirectory + "\\KmeansTrainResult.json";
 
+            
             //LoadFiles
             if (File.Exists(MnistPixelFilePath) && File.Exists(MnistLabelFilePath))
             {
                 var MnistDataSet = MnistDataSetLoader.LoadData(MnistPixelFilePath, MnistLabelFilePath);
                 Dataset = new VectorCollection<RawImage28x28>(MnistDataSet);
-                knn = new Knn<RawImage28x28>(Dataset);
             }
 
             if (File.Exists(KmeansTrainResultFilePath))
             {
-                KmeansTrainResult = new Kmeans<RawImage28x28>.TrainResult(KmeansTrainResultFilePath);
-            }
-
-
-
-            if (KmeansTrainResult==null && knn==null)
-            {
-                Console.WriteLine("Fatal error: Can not find any trained data.");
-                Console.WriteLine("Press any key to exit...");
-                Console.ReadKey();
-                return;
+                KmeansTrainResult = new KmeansTrainResult<RawImage28x28>(KmeansTrainResultFilePath);
             }
 
             if (Dataset != null)
             {
+                var knnTrainer = new KnnTrainer<RawImage28x28>(Dataset);
+                knn = new Knn<RawImage28x28>(knnTrainer.Train());
+
                 if (KmeansTrainResult == null)
                 {
                     Console.WriteLine("Can't find Kmeans train data.");
-                    AskKmeansTrainData();
+                    KmeansTrainResult = AskKmeansTrainData(false);
                 }
                 else if (KmeansTrainResult != null)
                 {
@@ -71,67 +67,73 @@ namespace HandwritingDigitRecognition
                     if (Console.ReadLine().ToLower().Contains('t'))
                     {
                         KmeansTrainResult = null;
-                        AskKmeansTrainData();
+                        KmeansTrainResult = AskKmeansTrainData(true);
                     }
                 }
             }
-
-            if (knn == null)
+            else
             {
                 Console.WriteLine("Can't find Knn train data, ignored");
-                Console.WriteLine("Press any key to confirm.");
+                Console.WriteLine("Press any key to continue.");
                 Console.ReadKey();
             }
 
-            MainForm form = new MainForm(knn, KmeansTrainResult);
+            if (KmeansTrainResult!=null)
+            {
+                kmeans = new Kmeans<RawImage28x28>(KmeansTrainResult);
+            }
+
+            if (kmeans == null && knn == null)
+            {
+                Console.WriteLine("Fatal error: Can not find any trained data.");
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+                return;
+            }
+
+            MainForm form = new MainForm(knn, kmeans);
             Application.EnableVisualStyles();
             Application.Run(form);
         }
 
-        private static void AskKmeansTrainData()
+        private static KmeansTrainResult<RawImage28x28> AskKmeansTrainData(bool SkipConfirm)
         {
             while (true)
             {
-                Console.WriteLine("Input 't' to training, 'i' to ignore.");
-                string input = Console.ReadLine();
+                string input;
+
+                if (SkipConfirm)
+                    input = "t";
+                else
+                {
+                    Console.WriteLine("Input 't' to start training, 'i' to ignore.");
+                    input = Console.ReadLine();
+                }
+
                 if (input.ToLower().Contains('t'))
                 {
-                    Kmeans<RawImage28x28> kmeans = new Kmeans<RawImage28x28>(Dataset);
                     Console.WriteLine("Input ConvDistance:(Default:3)");
-                    double ConvDistance = Convert.ToDouble(Console.ReadLine());
+                    float ConvDistance = Convert.ToSingle(Console.ReadLine());
                     Console.WriteLine("Input iteration limit:(Default:200)");
                     int IterationLimit = Convert.ToInt32(Console.ReadLine());
 
                     Console.WriteLine("Training......");
-                    //List<VectorCollection<RawImage28x28>> PresetCenter = new List<VectorCollection<RawImage28x28>>();
-                    //var GroupedTagDataset = Dataset.GroupBy(x => x.OriginalTag);
-                    //foreach (var GroupedTagData in GroupedTagDataset)
-                    //{
-                    //    VectorCollection<RawImage28x28> vecotrCollect = new VectorCollection<RawImage28x28>(GroupedTagData);
-
-                    //    VectorCollection<RawImage28x28> GroupSetCenter = new VectorCollection<RawImage28x28>();
-                    //    GroupSetCenter.SetCenter(vecotrCollect.GetMean());
-                    //    GroupSetCenter.ClassifiedTag = GroupedTagData.Key;
-                    //    GroupSetCenter.OriginalTag = GroupedTagData.Key;
-
-                    //    PresetCenter.Add(GroupSetCenter);
-                    //}
-                    //KmeansTrainResult = kmeans.Training(PresetCenter, IterationLimit, ConvDistance);
-
-                    KmeansTrainResult = kmeans.Training(10, IterationLimit, ConvDistance);
+                    var MnistDataSet = MnistDataSetLoader.LoadData(MnistPixelFilePath, MnistLabelFilePath);
+                    KmeansTrainer<RawImage28x28> kmeansTrainer = new KmeansTrainer<RawImage28x28>(MnistDataSet, 10, ConvDistance, IterationLimit);
+                    var TrainResult = kmeansTrainer.Train();
 
                     Console.WriteLine("Save trained result?[y/n]");
                     if (Console.ReadLine().ToLower().Contains('y'))
                     {
-                        KmeansTrainResult.SaveTo(KmeansTrainResultFilePath);
+                        TrainResult.SaveToFile(KmeansTrainResultFilePath);
                         Console.WriteLine("Saved at {0}", KmeansTrainResultFilePath);
                     }
 
-                    break;
+                    return TrainResult;
                 }
                 else if (input.ToLower().Contains("i"))
                 {
-                    break;
+                    return null;
                 }
             }
             

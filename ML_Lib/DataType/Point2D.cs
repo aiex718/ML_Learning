@@ -6,29 +6,36 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text;
 using Newtonsoft.Json;
+using System.Drawing;
 
 namespace ML_Lib.DataType
 {
     public class Point2D: Vector
     {
         [JsonIgnore]
-        public override int Dimension { get { return 2; } }
+        const int Length = 2;
 
         [JsonIgnore]
-        public double x { get { return VectorData[0]; } set { VectorData[0] = value; } }
+        public float x { get { return VectorData[0]; } set { VectorData[0] = value; } }
         [JsonIgnore]
-        public double y { get { return VectorData[1]; } set { VectorData[1] = value; } }
-        
-        public Point2D():base()
+        public float y { get { return VectorData[1]; } set { VectorData[1] = value; } }
+
+        protected override int DimensionExpected { get { return Length; } }
+
+        public Point2D():base(new float[Length],null)
         {
 
         }
 
-        public Point2D(double X, double Y,string originalTag=null):base()
+        public Point2D(float X, float Y,string TagSet = null):base(new float[Length] {X,Y}, TagSet)
         {
             x = X;
             y = Y;
-            OriginalTag = originalTag;
+        }
+
+        public virtual PointF ToPoint()
+        {
+            return new PointF(x,y);
         }
 
         public override string Print()

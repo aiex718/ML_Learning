@@ -9,9 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ML_Lib</RootNamespace>
     <AssemblyName>ML_Lib</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -52,15 +57,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithm\Kmeans.cs" />
-    <Compile Include="Algorithm\Knn.cs" />
+    <Compile Include="Classifier\Kmeans\Kmeans.cs" />
+    <Compile Include="Classifier\Knn\Knn.cs" />
+    <Compile Include="Classifier\Knn\KnnTrainResult.cs" />
+    <Compile Include="DataType\BoundingBox.cs" />
+    <Compile Include="DataType\Extensions\BitmapExtensions.cs" />
+    <Compile Include="DataType\Extensions\Point2DExtensions.cs" />
+    <Compile Include="DataType\Extensions\BoundingBoxExtensions.cs" />
+    <Compile Include="DataType\GroupedPoint2D.cs" />
     <Compile Include="DataType\Point2D.cs" />
     <Compile Include="DataType\RawImage28x28.cs" />
+    <Compile Include="Classifier\Kmeans\KmeansTrainResult.cs" />
+    <Compile Include="Classifier\TrainResultBase.cs" />
     <Compile Include="DataType\Vector.cs" />
     <Compile Include="Interface\ITag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\FileReader.cs" />
+    <Compile Include="Tools\BitmapReader.cs" />
     <Compile Include="Tools\MnistDataSetLoader.cs" />
+    <Compile Include="Tools\PointGrouper.cs" />
     <Compile Include="Tools\Random2DPoints.cs" />
+    <Compile Include="Classifier\Kmeans\KmeansTrainer.cs" />
+    <Compile Include="Classifier\Knn\KnnTrainer.cs" />
+    <Compile Include="Views\ImageViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ImageViewForm.Designer.cs">
+      <DependentUpon>ImageViewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Points2DCollectionsViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -72,9 +96,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Views\ImageViewForm.resx">
+      <DependentUpon>ImageViewForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Points2DCollectionsViewer.resx">
       <DependentUpon>Points2DCollectionsViewer.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

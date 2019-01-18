@@ -11,67 +11,63 @@ namespace ML_Lib.DataType
 {
     public abstract class Vector:ITag
     {
-        public abstract int Dimension { get; }
-        public abstract string Print();
+        [JsonIgnore]
+        protected abstract int DimensionExpected { get; }
+
+        [JsonIgnore]
+        public int Dimension { get { return VectorData.Length; } }
+
+        [JsonProperty]
+        public float[] VectorData { get; internal set; } = null;
+        [JsonProperty]
+        public string Tag { get; set; } = null;
+
+        public Vector(float[] vectorData, string TagSet)
+        {
+            VectorData = vectorData ?? throw new Exception("VectorData is null");
+            if (Dimension != DimensionExpected)
+                throw new Exception("VectorData length not valid.");
+
+            Tag = TagSet;
+        }
+
+        public Vector(double[] vectorData, string TagSet)
+        {
+            if (vectorData==null)
+                throw new Exception("VectorData is null");
+            //if (Dimension != DimensionExpected)
+            //    throw new Exception("VectorData length not valid.");
+            VectorData = Array.ConvertAll(vectorData, x => (float)x);
+            Tag = TagSet;
+        }
         
-        public double[] VectorData { get; internal set; } = null;
-        public string OriginalTag { get; set; } = null;
-        public string ClassifiedTag { get; set; } = null;
-
-        public Vector()
-        {
-            VectorData = new double[Dimension];
-        }
-
-        public T ConvertTo<T>() where T : Vector, new()
-        {
-            var t = new T();
-
-            if (t.Dimension == this.Dimension)
-            {
-                t.VectorData = this.VectorData;
-                t.OriginalTag = this.OriginalTag;
-                t.ClassifiedTag = this.ClassifiedTag;
-                return t;
-            }
-            else
-                throw new Exception("Vector dimension not equivalent");
-        }
-        public double GetEuclideanDistance(Vector other)
+        public float GetEuclideanDistance(Vector other)
         {
             return GetDistance(other, 2);
         }
-        public double GetDistance(Vector other,int Norm)
+
+        public float GetDistance(Vector other,int Norm)
         {
             if (this.Dimension != other.Dimension)
                 throw new Exception("Vector dimension not equivalent");
             else
             {
-                double sum = 0.0;
-
+                double sum = 0;
+                
                 for (int i = 0; i < VectorData.Length; i++)
+                {
                     sum += Math.Pow(VectorData[i] - other.VectorData[i], Norm);
+                }
 
-                return Math.Pow(sum, 1.0/ Norm);
+                return (float)Math.Pow(sum, 1.0/ Norm);
             }
         }
-    }
 
-    public class VectorFromArray : Vector
-    {
-        public override int Dimension { get { return VectorData == null ? 0 : VectorData.Length; } }
-        public VectorFromArray(double[] vectorData = null, string originalTag = null, string classifiedTag = null)
-        {
-            VectorData = vectorData;
-            OriginalTag = originalTag;
-            ClassifiedTag = classifiedTag;
-        }
-
-        public override string Print()
+        public virtual string Print()
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (double d in this.VectorData)
+            foreach (float d in this.VectorData)
             {
                 sb.Append(d.ToString("0.000"));
                 sb.Append(' ');
@@ -86,31 +82,18 @@ namespace ML_Lib.DataType
 
     public class VectorCollection<T> : List<T>, ITag where T : Vector, new()
     {
-        Random random = new Random(Guid.NewGuid().GetHashCode());
-        
-        T Center { get; set; } = null;
-        public string OriginalTag { get; set; } = null;
-        public string ClassifiedTag { get; set; } = null;
+        public T Center
+        {
+            get { return new T { Tag=this.Tag, VectorData = CenterValue }; }
+            set { CenterValue = value.VectorData;}
+        }
+        float[] CenterValue;
+
+        public string Tag { get; set; } = null;
 
         public VectorCollection()
         {
             ;
-        }
-
-        public VectorCollection(string json)
-        {
-            JToken jToken = JToken.Parse(json);
-            string originalTag = jToken.Value<string>("OriginalTag");
-            string classifiedTag = jToken.Value<string>("ClassifiedTag");
-            double[] vectorData = jToken.Value<JArray>("VectorData").ToObject<double[]>();
-
-            this.ClassifiedTag = classifiedTag;
-            this.OriginalTag = originalTag;
-
-            Center = new T();
-            Center.ClassifiedTag = classifiedTag;
-            Center.OriginalTag = originalTag;
-            Center.VectorData = vectorData;
         }
 
         public VectorCollection(IEnumerable<T> items)
@@ -118,63 +101,41 @@ namespace ML_Lib.DataType
             this.AddRange(items);
         }
 
-        public void SetCenter(Vector center)
-        {
-            Center = center.ConvertTo<T>();
-        }
-
-        public T GetCenter()
-        {
-            if(Center!=null)
-            {
-                Center.OriginalTag = this.OriginalTag;
-                Center.ClassifiedTag = this.ClassifiedTag;
-            }
-                
-            return Center;
-        }
-
         public T GetMean()
         {
             if (this.Any())
             {
-                double[] Result = new double[this.First().Dimension];
+                float[] Mean = new float[this.First().Dimension];
 
-                for (int i = 0; i < Result.Length; i++)
-                    Result[i] = this.Select(x=>x.VectorData[i]).Average();
+                for (int i = 0; i < Mean.Length; i++)
+                    Mean[i] = this.Select(x=>x.VectorData[i]).Average();
                 
-                return new VectorFromArray(Result,OriginalTag,ClassifiedTag).ConvertTo<T>();
+                T Result = new T
+                {
+                    Tag = Tag,
+                    VectorData = Mean
+                };
+
+                return Result;
             }
             else
                 return null;
         }
-        
-        public T GetRandomMember()
-        {
-            return this.ElementAt(random.Next(0, this.Count));
-        }
 
-        public void AssignTagFromMostOriginalTag()
+        public string GetMostTag()
         {
             string MostTag = this
-                .GroupBy(x => x.OriginalTag)
+                .GroupBy(x => x.Tag)
                 .OrderByDescending(group => group.Count())
                 .First().Key;
 
-            this.ClassifiedTag = MostTag;
+            return MostTag;
         }
 
         public void Print()
         {
             foreach (var vector in this)
                 vector.Print();
-        }
-
-        public string ConvertToJson()
-        {
-            var VectorData = GetCenter().VectorData;
-            var json = JsonConvert.SerializeObject(new { OriginalTag, ClassifiedTag, VectorData });
-            return json;
         }
 
 

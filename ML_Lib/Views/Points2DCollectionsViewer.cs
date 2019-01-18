@@ -19,6 +19,8 @@ namespace ML_Lib.Views
     {
         static List<Points2DCollectionsViewer> OpenedView = new List<Points2DCollectionsViewer>();
 
+        static Dictionary<string, int> TagToValueDict = new Dictionary<string, int>();
+
         public bool RenderFinish = false;
         public Points2DCollectionsViewer()
         {
@@ -33,19 +35,13 @@ namespace ML_Lib.Views
             var model = new PlotModel { Title = viewer.Text };
             var scatterSeries = new ScatterSeries { MarkerType = MarkerType.Circle };
 
-
-            int MaxTagValue = 2;
             foreach (var point in PointsWithTag)
             {
-                int tag = Convert.ToInt32(point.ClassifiedTag);
-                scatterSeries.Points.Add(new ScatterPoint(point.x, point.y, 2, tag));
-
-                if (tag > MaxTagValue)
-                    MaxTagValue = tag;
+                scatterSeries.Points.Add(new ScatterPoint(point.x, point.y, 2, TagToValue(point.Tag)));
             }
 
             model.Series.Add(scatterSeries);
-            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Rainbow(++MaxTagValue) });
+            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Rainbow(TagToValueDict.Count() + 1) });
 
             model.Axes.Add(new LinearAxis() { Minimum = min, Maximum = max, Position = AxisPosition.Bottom });
             model.Axes.Add(new LinearAxis() { Minimum = min, Maximum = max, Position = AxisPosition.Left });
@@ -84,29 +80,31 @@ namespace ML_Lib.Views
         /// </summary>
         public void AddMarkAt(Point2D point,int size, int type)
         {
-            MarkerType t = MarkerType.None;
-            if (type == 1)
-                t = MarkerType.Star;
-            else if (type == 2)
-                t = MarkerType.Cross;
-            else if (type == 3)
-                t = MarkerType.Circle;
-
+            MarkerType t = (MarkerType)type;
             var scatterSeries = new ScatterSeries { MarkerType = t };
-            scatterSeries.Points.Add(new ScatterPoint(point.x, point.y, size, Convert.ToDouble(point.ClassifiedTag)));
+            scatterSeries.Points.Add(new ScatterPoint(point.x, point.y, size, TagToValue(point.Tag)));
             plotView.Model.Series.Add(scatterSeries);
-            plotView.Refresh();
         }
-
-
 
         private void Points2DCollectionsViewer_Shown(object sender, EventArgs e)
         {
             RenderFinish = true;
         }
 
+        private static int TagToValue(string Tag)
+        {
+            int TagValue;
+            if (TagToValueDict.Keys.Contains(Tag) == false)
+            {
+                TagValue = TagToValueDict.Count() + 1;
+                TagToValueDict.Add(Tag, TagValue);
+            }
+            else
+            {
+                TagValue = TagToValueDict[Tag];
+            }
 
-
-
+            return TagValue;
+        }
     }
 }

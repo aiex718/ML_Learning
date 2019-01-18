@@ -17,7 +17,7 @@ namespace HandwritingDigitRecognition.Views
             InitializeComponent();
         }
 
-        public void SetValue(Image img,string tag,double distance)
+        public void SetValue(Image img,string tag,float distance)
         {
             Image OldImage = Trained_Picturebox.Image;
             Trained_Picturebox.Image = img;
