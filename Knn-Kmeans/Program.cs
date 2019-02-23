@@ -17,12 +17,12 @@ namespace Program
 
                 if (input.Contains('m'))
                 {
-                    ProgramKmeans.Kmeans();
+                    ProgramKmeans.KmeansMain();
                     break;
                 }
                 else if (input.Contains('n'))
                 {
-                    ProgramKnn.Knn();
+                    ProgramKnn.KnnMain();
                     break;
                 }
                 else if(input.Contains('q'))

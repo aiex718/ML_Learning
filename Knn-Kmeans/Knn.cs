@@ -21,7 +21,7 @@ namespace Program
         static int Round = 0;
         static bool Retry = true;
 
-        public static void Knn()
+        public static void KnnMain()
         {
             Console.WriteLine("Using demo setup?[y/n]");
             string str = Console.ReadLine();

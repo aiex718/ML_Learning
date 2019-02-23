@@ -20,7 +20,7 @@ namespace Program
         static int Round = 0;
         static bool Retry = true;
 
-        public static void Kmeans()
+        public static void KmeansMain()
         {
             Console.WriteLine("Using demo setup?[y/n]");
             string str = Console.ReadLine();
@@ -30,16 +30,17 @@ namespace Program
                 NodesMaxValueSet = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("Input node count:(Default:10000 , Min:0)");
                 NodesSet = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Input k:( Default:3 , Min:1)");
+                Console.WriteLine("Input groups count for random points to divid into:(Default:3 , Min:0)");
+                DataGroupCount = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Input fluctuation ratio:(Default:0.18 , Min:0 , Max:0.5)");
+                FluctuationRatio = Convert.ToSingle(Console.ReadLine());
+				
+				Console.WriteLine("Input k:( Default:3 , Min:1)");
                 k = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("Input iteration limit:(Default:100)");
                 IterationLimit = Convert.ToInt32(Console.ReadLine());
                 Console.WriteLine("Input convergence distance:(Default:5)");
                 ConvDistance = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Input groups count for random points to divid into:(Default:3 , Min:0)");
-                DataGroupCount = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Input fluctuation ratio:(Default:0.18 , Min:0 , Max:0.5)");
-                FluctuationRatio = Convert.ToSingle(Console.ReadLine());
             }
 
             //Gen grouped random nodes

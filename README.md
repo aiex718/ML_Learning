@@ -1,25 +1,28 @@
 # ML_Learning
 A course project. Currently contains 2 algorithm, K-nn and K-means.
-And 1 implementation, Handwriting Digit Recognition.
+2 implementation, Handwriting digit recognition using MNIST dataset, and Object detection using SURF algorithm.
 
 Using [Oxyplot](http://www.oxyplot.org/) for views.
 
 
 ### K-nn ###
-![](https://raw.githubusercontent.com/aiex718/ML_Learning/master/Knn/KNN.png)
+![](https://raw.githubusercontent.com/aiex718/ML_Learning/master/Knn-Kmeans/Knn.png)
 
 
 ### K-means ###
-![](https://raw.githubusercontent.com/aiex718/ML_Learning/master/Kmeans/Kmeans.png)
+![](https://raw.githubusercontent.com/aiex718/ML_Learning/master/Knn-Kmeans/Kmeans.png)
 
 
 ### Handwriting Digit Recognition ###
 ![](https://raw.githubusercontent.com/aiex718/ML_Learning/master/HandwritingDigitRecognition/HandwritingDigitRecognition.png)
 
 
-# Usage
-Launch Kmeans.exe or Knn.exe, input Y for demonstration, N for custom parameters.
+### Object Detection ###
+![](https://raw.githubusercontent.com/aiex718/ML_Learning/master/Images/TestSample/dinosaurs/ALL/Result/IMG_6867Final%20Result.png)
 
+
+# Usage
+Launch KmeansKnn.exe, input m for Kmeans, n for Knn, q to quit.
 
 Launch HandwritingDigitRecognition.exe, input U for preset trained data, use mouse to draw in input box then click classify.
 
