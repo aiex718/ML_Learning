@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,10 +26,10 @@ namespace ML_ObjectDetection
 
         static List<KeyValuePair<string, string>> SamplePathTag_Pairs = new List<KeyValuePair<string, string>>()
         {
-            new KeyValuePair<string,string>(CurrentDirectory + @"\..\..\..\Images\TrainingSample\ankylosaurus" , "ankylosaurus" ),
-            new KeyValuePair<string,string>(CurrentDirectory + @"\..\..\..\Images\TrainingSample\brontosaurus" , "brontosaurus" ),
-            new KeyValuePair<string,string>(CurrentDirectory + @"\..\..\..\Images\TrainingSample\stegosaurus" , "stegosaurus" ),
-            new KeyValuePair<string,string>(CurrentDirectory + @"\..\..\..\Images\TrainingSample\triceratops" , "triceratops" ),
+            new KeyValuePair<string,string>(FindImageFolder("ankylosaurus") , "ankylosaurus" ),
+            new KeyValuePair<string,string>(FindImageFolder("brontosaurus") , "brontosaurus" ),
+            new KeyValuePair<string,string>(FindImageFolder("stegosaurus") , "stegosaurus" ),
+            new KeyValuePair<string,string>(FindImageFolder("triceratops") , "triceratops" ),
         };
 
         //Parameter for SURF
@@ -39,9 +40,7 @@ namespace ML_ObjectDetection
         [STAThread]
         static void Main(string[] args)
         {
-
             KnnTrainResult<SURFFeature> TrainedFeatures = new KnnTrainResult<SURFFeature>();
-
             SURFFeatureExtractor FeatureExtractor = new SURFFeatureExtractor(threshold, octaves, initial)
             { ExtractNegativeOnly = true, MinimumScale = minimumScale };
 
@@ -72,9 +71,17 @@ namespace ML_ObjectDetection
 
             Application.EnableVisualStyles();
             Application.Run(new MainForm(FeatureExtractor, TrainedFeatures));
-
-            //Console.WriteLine("Press any key to exit....");
-            //Console.ReadKey();
         }
+
+
+        static string FindImageFolder(string FolderName)
+        {
+            string FindPath = CurrentDirectory + @"\Images\TrainingSample\"+ FolderName;
+            if (Directory.Exists(FindPath))
+                return FindPath;
+            else
+                return CurrentDirectory + @"\..\..\..\Images\TrainingSample\"+FolderName;
+        }
+
     }
 }
