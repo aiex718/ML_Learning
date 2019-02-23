@@ -3,6 +3,7 @@ A course project. Currently contains 2 algorithm, K-nn and K-means.
 2 implementation, Handwriting digit recognition using MNIST dataset, and Object detection using SURF algorithm.
 
 Using [Oxyplot](http://www.oxyplot.org/) for views.
+
 [Accord.NET Framework](http://accord-framework.net/) for SURF algorithm and DirectShow webcam.
 
 ### K-nn ###
